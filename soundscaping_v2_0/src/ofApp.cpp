@@ -3,10 +3,18 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    
+    kin.setupKinect();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    vector<string> jointNames;
+    jointNames.push_back("righthand");
+    
+    kin.requestData(jointNames);
+    kin.updateKinect();
 
 }
 

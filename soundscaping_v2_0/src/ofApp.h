@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "kinectOsc.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
 
@@ -19,4 +21,5 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+    kinectRecorder kin;
 };

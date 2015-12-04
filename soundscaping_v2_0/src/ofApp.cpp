@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    
+    ofSetFrameRate(60);
     
     kin.setupKinect();
 }
@@ -10,16 +11,17 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    vector<string> jointNames;
-    jointNames.push_back("righthand");
+    kin.requestAllJoints(2);
+    kin.updateAllJoints();
     
-    kin.requestData(jointNames);
-    kin.updateKinect();
+    cout << kin.joints["righthand"].avgVelocity.length() << endl;
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
 
 }
 

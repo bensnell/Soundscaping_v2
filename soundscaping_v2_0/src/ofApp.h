@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "kinectOsc.h"
 #include "ofxOsc.h"
+#include "kinectJoint.h"
 
 class ofApp : public ofBaseApp{
 

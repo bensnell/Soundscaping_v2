@@ -8,61 +8,119 @@
 
 #include "kinectOsc.h"
 
+// constructor
+kinectRecorder::kinectRecorder() {
+    
+    // setup all joints
+    for (int i = 0; i < 15; i++) {
+        joints[jointNames[i]] = joint();
+    }
+}
+
+// --------------------------------------------------------------------
+
+// setup the OSC receivers and senders for communicating with the kinect
 void kinectRecorder::setupKinect() {
     
     receiver.setup(synapseIn);
     
     sender.setup("localhost", synapseOut);
-    
 }
 
 // --------------------------------------------------------------------
 
-void kinectRecorder::updateKinect() {
+// update all of the joints
+void kinectRecorder::updateAllJoints() {
     
+    // retrieve the waiting messages
     while (receiver.hasWaitingMessages()) {
         
-        ofxOscMessage mess;
-        receiver.getNextMessage(&mess);
-        string thisAddress = mess.getAddress();
-        vector<float> args;
+        // get the message
+        ofxOscMessage msg;
+        receiver.getNextMessage(&msg);
         
-        for (int i = 0; i < jointNames_.size(); i++) {
+        // check for which joint has been received
+        string thisAddress = msg.getAddress();
+    
+        // remove beginning "/" and anything after first "_"
+        int endIndex = thisAddress.find_first_of('_') - 1;
+        string jointName = thisAddress.substr(1, endIndex);
+        
+        // only continue if joint exists
+        if (joints.find(jointName) == joints.end()) continue;
+
+        // find type of first argument
+        ofxOscArgType thisType = msg.getArgType(0);
+        
+        // update the hits or physics depending on the type
+        if (thisType == OFXOSC_TYPE_STRING) { // hits
             
-            string tempName = "/" + jointNames_[i] + "_pos_world";
-            if (thisAddress.compare(tempName) == 0) {
+            string hitDirection = msg.getArgAsString(0);
+            
+            joints[jointName].hits[hitDirection] = true;
+            
+        } else if (thisType == OFXOSC_TYPE_FLOAT) { // physics
+            
+            // if this joint wasn't active, set new values and reset the averages
+            if (!joints[jointName].bActive) {
                 
-                for (int i = 0; i < mess.getNumArgs(); i++) {
-                    float thisArg = mess.getArgAsFloat(i);
-        
-                    args.push_back(thisArg);
-                    
-//                    cout << thisArg << "  ";
-                }
-//                cout << endl;
+                // reset all values related to position / velocity / acceleration
+                joints[jointName].resetPhysics();
                 
-                break;
+                // find new position
+                ofVec3f thisPosition = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+                
+                joints[jointName].position = thisPosition;
+                joints[jointName].avgPosition = thisPosition;
+                
+                // now the joint is active
+                joints[jointName].bActive = true;
+            }
+            // otherwise, calculate averages, velocities, and accelerations
+            else {
+                
+                // find new position
+                ofVec3f thisPosition = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+                
+                // find this velocity from the last position
+                ofVec3f thisVelocity = thisPosition - joints[jointName].position;
+                
+                // find this acceleration from the last velocity
+                ofVec3f thisAcceleration = thisVelocity - joints[jointName].velocity;
+                
+                // set new values and averages with weights
+                joints[jointName].position = thisPosition;
+                joints[jointName].avgPosition = joints[jointName].avgPosition * (1. - joints[jointName].avgWeight) + thisPosition * joints[jointName].avgWeight;
+                
+                joints[jointName].velocity = thisVelocity;
+                joints[jointName].avgVelocity = joints[jointName].avgVelocity * (1. - joints[jointName].avgWeight) + thisVelocity * joints[jointName].avgWeight;
+                
+                joints[jointName].acceleration = thisAcceleration;
+                joints[jointName].avgAcceleration = joints[jointName].avgAcceleration * (1. - joints[jointName].avgWeight) + thisAcceleration * joints[jointName].avgWeight;
+                
             }
         }
     }
-    
 }
 
 // --------------------------------------------------------------------
 
-void kinectRecorder::requestData(vector<string> jointNames) {
+// request data from all the joints
+void kinectRecorder::requestAllJoints(int coordinateSystem) {
     
-    jointNames_ = jointNames;
-    
-    if (ofGetElapsedTimeMillis() - lastTime >= 1990) {
-        lastTime = ofGetElapsedTimeMillis();
+    // request data for all joints a little less than every 2 seconds
+    unsigned long thisTime = ofGetElapsedTimeMillis();
+    if (thisTime - lastTime >= 1990) {
+
+        // reset the last time
+        lastTime = thisTime;
         
-    
-        for (int i = 0; i < jointNames.size(); i++) {
+        // send a keepalive message to synapse for all joints
+        for (int i = 0; i < 15; i++) {
             ofxOscMessage outMess;
             string tempString = "/" + jointNames[i] + "_trackjointpos";
             outMess.setAddress(tempString);
-            outMess.addIntArg(2);
+            outMess.addIntArg(coordinateSystem);
             
             sender.sendMessage(outMess);
         }

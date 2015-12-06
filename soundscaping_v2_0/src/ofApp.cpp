@@ -13,8 +13,10 @@ void ofApp::update(){
     
     kin.requestAllJoints(2);
     kin.updateAllJoints();
+    kin.updateState();
     
-    cout << kin.joints["righthand"].avgVelocity.length() << endl;
+    // magnitude of the avg velocity of the right hand
+//    cout << kin.joints["righthand"].avgVelocity.length() << endl;
 
 }
 

@@ -12,12 +12,17 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "kinectJoint.h"
+#include "kinectGestures.h"
 
-class kinectRecorder {
+class kinectRecorder { // more like a skeleton
     
 public:
     
     kinectRecorder();
+    
+    // ---------------------
+    // --- COMMUNICATION ---
+    // ---------------------
     
     ofxOscReceiver receiver;
     int synapseIn = 12345; // could also use 12347
@@ -27,8 +32,12 @@ public:
     
     void setupKinect();
     
+    // ---------------------
+    // ---- JOINT DATA -----
+    // ---------------------
+    
     void updateAllJoints();
-    map<string, joint> joints; // stores all information related to joints
+    map<string, joint> skeleton; // stores all joint information for one skeleton
     
     void requestAllJoints(int coordinateSystem = 2);
     // add the argument of the coordinate system to use for positions:
@@ -39,6 +48,14 @@ public:
     unsigned long lastTime = -2000;
     
     string jointNames [15] = { "righthand", "lefthand", "rightelbow", "leftelbow", "rightfoot", "leftfoot", "rightknee", "leftknee", "head", "torso", "leftshoulder", "rightshoulder", "lefthip", "righthip", "closesthand" };
+    
+    // ---------------------
+    // ------- STATE -------
+    // ---------------------
+    
+    // updates states of joints (active or inactive) and of skeleton
+    bool updateState(unsigned long maxTime = 1000);
+    bool activeSkeleton = false;
 };
 
 #endif /* defined(__soundscaping_v2_0__kinectOsc__) */

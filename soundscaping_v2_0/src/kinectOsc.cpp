@@ -13,7 +13,7 @@ kinectRecorder::kinectRecorder() {
     
     // setup all joints
     for (int i = 0; i < 15; i++) {
-        joints[jointNames[i]] = joint();
+        skeleton[jointNames[i]] = joint();
     }
 }
 
@@ -47,7 +47,7 @@ void kinectRecorder::updateAllJoints() {
         string jointName = thisAddress.substr(1, endIndex);
         
         // only continue if joint exists
-        if (joints.find(jointName) == joints.end()) continue;
+        if (skeleton.find(jointName) == skeleton.end()) continue;
 
         // find type of first argument
         ofxOscArgType thisType = msg.getArgType(0);
@@ -57,24 +57,24 @@ void kinectRecorder::updateAllJoints() {
             
             string hitDirection = msg.getArgAsString(0);
             
-            joints[jointName].hits[hitDirection] = true;
+            skeleton[jointName].hits[hitDirection] = true;
             
         } else if (thisType == OFXOSC_TYPE_FLOAT) { // physics
             
             // if this joint wasn't active, set new values and reset the averages
-            if (!joints[jointName].bActive) {
+            if (!skeleton[jointName].bActive) {
                 
                 // reset all values related to position / velocity / acceleration
-                joints[jointName].resetPhysics();
+                skeleton[jointName].resetPhysics();
                 
                 // find new position
                 ofVec3f thisPosition = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
                 
-                joints[jointName].position = thisPosition;
-                joints[jointName].avgPosition = thisPosition;
+                skeleton[jointName].setPosition(thisPosition);
+                skeleton[jointName].avgPosition = thisPosition;
                 
                 // now the joint is active
-                joints[jointName].bActive = true;
+                skeleton[jointName].bActive = true;
             }
             // otherwise, calculate averages, velocities, and accelerations
             else {
@@ -83,20 +83,13 @@ void kinectRecorder::updateAllJoints() {
                 ofVec3f thisPosition = ofVec3f(msg.getArgAsFloat(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
                 
                 // find this velocity from the last position
-                ofVec3f thisVelocity = thisPosition - joints[jointName].position;
+                ofVec3f thisVelocity = thisPosition - skeleton[jointName].position;
                 
                 // find this acceleration from the last velocity
-                ofVec3f thisAcceleration = thisVelocity - joints[jointName].velocity;
+                ofVec3f thisAcceleration = thisVelocity - skeleton[jointName].velocity;
                 
-                // set new values and averages with weights
-                joints[jointName].position = thisPosition;
-                joints[jointName].avgPosition = joints[jointName].avgPosition * (1. - joints[jointName].avgWeight) + thisPosition * joints[jointName].avgWeight;
-                
-                joints[jointName].velocity = thisVelocity;
-                joints[jointName].avgVelocity = joints[jointName].avgVelocity * (1. - joints[jointName].avgWeight) + thisVelocity * joints[jointName].avgWeight;
-                
-                joints[jointName].acceleration = thisAcceleration;
-                joints[jointName].avgAcceleration = joints[jointName].avgAcceleration * (1. - joints[jointName].avgWeight) + thisAcceleration * joints[jointName].avgWeight;
+                // set new values and averages
+                skeleton[jointName].setAllPhysics(thisPosition, thisVelocity, thisAcceleration);
                 
             }
         }
@@ -125,5 +118,43 @@ void kinectRecorder::requestAllJoints(int coordinateSystem) {
             sender.sendMessage(outMess);
         }
     }
+}
+
+// --------------------------------------------------------------------
+
+// returns whether skeleton is actively being tracked (more than 1/2 of new data is coming in) and has been updated within the last second
+// also updates bActive for each joint
+bool kinectRecorder::updateState(unsigned long maxTime) {
+    
+    // number of active Joints
+    int nActiveJoints = 0;
+    
+    // iterate through all elements in map
+    map<string, joint>::iterator it;
+    
+    // get current time
+    unsigned long thisTime = ofGetElapsedTimeMillis();
+    
+    for (it == skeleton.begin(); it != skeleton.end(); it++) {
+        
+        // This is how you access the pair's elements:
+//        string thisString = it->first;  // key
+//        joint thisJoint = it->second;   // value
+        
+        // if the joint was last updated more than maxTime ago, set its active state to false
+        if (it->second.lastUpdateTime < (thisTime - maxTime)) {
+            
+            it->second.bActive = false;
+        } else {
+            
+            // otherwise, we have one more active joint
+            nActiveJoints++;
+        }
+    }
+    
+    // if more than half of the joints are active
+    activeSkeleton = (nActiveJoints >= ceil((double)skeleton.size()));
+    return activeSkeleton;
+    
 }
 

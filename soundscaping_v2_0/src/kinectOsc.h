@@ -56,6 +56,7 @@ public:
     // updates states of joints (active or inactive) and of skeleton
     bool updateState(unsigned long maxTime = 1000);
     bool activeSkeleton = false;
+    
 };
 
 #endif /* defined(__soundscaping_v2_0__kinectOsc__) */

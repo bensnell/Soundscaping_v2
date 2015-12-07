@@ -4,6 +4,7 @@
 #include "kinectOsc.h"
 #include "ofxOsc.h"
 #include "kinectJoint.h"
+#include "gestureRecognition.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,4 +24,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
     kinectRecorder kin;
+    gestureProcessor gst;
+
 };

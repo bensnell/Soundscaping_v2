@@ -19,7 +19,7 @@ kinectRecorder::kinectRecorder() {
 
 // --------------------------------------------------------------------
 
-// setup the OSC receivers and senders for communicating with the kinect
+// setup the OSC receivers and senders for communicating with the kinect and Max
 void kinectRecorder::setupKinect() {
     
     receiver.setup(synapseIn);
@@ -73,8 +73,7 @@ void kinectRecorder::updateAllJoints() {
                 skeleton[jointName].setPosition(thisPosition);
                 skeleton[jointName].avgPosition = thisPosition;
                 
-                // now the joint is active
-                skeleton[jointName].bActive = true;
+                // getting data does not mean joint is active (takes 10 sec for it to stop sending data)
             }
             // otherwise, calculate averages, velocities, and accelerations
             else {
@@ -132,20 +131,42 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
     // iterate through all elements in map
     map<string, joint>::iterator it;
     
-    // get current time
-    unsigned long thisTime = ofGetElapsedTimeMillis();
+//    // get current time
+//    unsigned long thisTime = ofGetElapsedTimeMillis();
+//    
+//    for (it = skeleton.begin(); it != skeleton.end(); it++) {
+//        
+//        // This is how you access the pair's elements:
+////        string thisString = it->first;  // key
+////        joint thisJoint = it->second;   // value
+//        
+//        cout << it->second.lastUpdateTime << endl;
+//        
+//        // if the joint was last updated more than maxTime ago, set its active state to false
+//        if ((it->second.lastUpdateTime + maxTime) < thisTime) {
+//            
+//            it->second.bActive = false;
+//        } else {
+//            
+//            // otherwise, we have one more active joint
+//            nActiveJoints++;
+//        }
+//    }
     
-    for (it == skeleton.begin(); it != skeleton.end(); it++) {
+    for (it = skeleton.begin(); it != skeleton.end(); it++) {
         
         // This is how you access the pair's elements:
-//        string thisString = it->first;  // key
-//        joint thisJoint = it->second;   // value
+        //        string thisString = it->first;  // key
+        //        joint thisJoint = it->second;   // value
         
-        // if the joint was last updated more than maxTime ago, set its active state to false
-        if (it->second.lastUpdateTime < (thisTime - maxTime)) {
+        // compare the current and previous position for each joint
+        if (it->second.position == it->second.prevPosition) {
             
             it->second.bActive = false;
         } else {
+            
+            // set joint to be active
+            it->second.bActive = true;
             
             // otherwise, we have one more active joint
             nActiveJoints++;
@@ -153,8 +174,16 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
     }
     
     // if more than half of the joints are active
-    activeSkeleton = (nActiveJoints >= ceil((double)skeleton.size()));
+    activeSkeleton = (nActiveJoints == 15);
+    
     return activeSkeleton;
     
+    
 }
+
+// --------------------------------------------------------------------
+
+
+
+
 

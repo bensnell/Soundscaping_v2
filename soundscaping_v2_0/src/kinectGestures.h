@@ -43,6 +43,8 @@ public:
 
     // NEED DEBOUNCER
     
+    unsigned long lastGestureOnTime;
+    
 };
 
 #endif /* defined(__soundscaping_v2_0__kinectGestures__) */

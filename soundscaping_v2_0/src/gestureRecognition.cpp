@@ -15,6 +15,7 @@ void gestureProcessor::linkSkeleton(map<string, joint> skeleton_, bool activeSke
     
     // setup max OSC
     toMax.setup("localhost", maxPort);
+//    toMax.setup("128.237.203.67", 1818);
     
     activeSkeleton = &activeSkeleton_;
     
@@ -40,7 +41,8 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
 //        cout << "here" << endl;
         
         // find the position of the right hand
-        ofVec3f rHand = skeleton_["righthand"].position;
+//        ofVec3f rHand = skeleton_["righthand"].position;
+        ofVec3f rHand = skeleton_["head"].position;
         ofVec3f rHandRelToCorner = rHand - spaceLowerCorner;
         
         float xDot = rHandRelToCorner.dot(ofVec3f(1., 0., 0.));
@@ -65,7 +67,7 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
             float yCenter = yIndex * unitSideLength + unitSideLength / 2.;
             float zCenter = zIndex * unitSideLength + unitSideLength / 2.;
             
-            currentPoint = ofVec3f(xCenter, yCenter, zCenter);
+            currentPoint = ofVec3f(xCenter, yCenter, zCenter) + spaceLowerCorner;
             
             recordingState = true;
             startTime = ofGetElapsedTimeMillis();
@@ -75,7 +77,7 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
             msg.setAddress("/record");
             msg.addIntArg(1);
             msg.addIntArg(currentBufferNumber);
-            msg.addIntArg(10000);
+            msg.addIntArg(1000);
             toMax.sendMessage(msg);
             
             cout << "start recording with buffer # " << currentBufferNumber << endl;
@@ -127,6 +129,9 @@ void gestureProcessor::playAudio(map<string, joint> skeleton_, bool activeSkelet
         
         float distToPoint = headPosition.distance(it->second);
         float volumeLevel = (diagonalLength - distToPoint) / diagonalLength;
+        volumeLevel = pow(volumeLevel, 3.f);
+        
+//        cout << volumeLevel << endl;
         
         msg.addFloatArg(volumeLevel);
         toMax.sendMessage(msg);

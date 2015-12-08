@@ -47,7 +47,7 @@ public:
 
     ofVec3f spaceLowerCorner = ofVec3f(-1000., -1000., 2000.);
     float spaceSideLength = 2000.;
-    int nSideDivisions = 10;
+    int nSideDivisions = 4;
     
     map<int, ofVec3f> soundParticles;
     int currentBufferNumber = -1; // if not -1, we're currently writing to a buffer
@@ -67,7 +67,7 @@ public:
 //    void sendToMax();
     
     void playAudio(map<string, joint> skeleton_, bool activeSkeleton_);
-    
+
     
     
 };

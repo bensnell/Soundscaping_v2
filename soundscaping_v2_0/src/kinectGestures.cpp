@@ -49,12 +49,28 @@ void gesture::updateGesture(map<string, joint> skeleton_, bool activeSkeleton_) 
 
 // -----------------------------------------------------------------------
 
+//void gesture::handsTogether(map<string, joint> skeleton_) {
+//    
+//    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100.) {
+//        
+//        setGestureState(true);
+//
+//    } else {
+//        
+//        setGestureState(false);
+//    }
+//}
+
 void gesture::handsTogether(map<string, joint> skeleton_) {
     
-    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100.) {
+    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
         
         setGestureState(true);
-    } else {
+        
+        lastGestureOnTime = ofGetElapsedTimeMillis();
+        
+    }
+    if ((ofGetElapsedTimeMillis() > (lastGestureOnTime + 3000))){
         
         setGestureState(false);
     }

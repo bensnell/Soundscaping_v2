@@ -154,9 +154,42 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
     // if any joints aren't active, skeleton is not actively being tracked
     activeSkeleton = (nActiveJoints == 15);
     
-    if (!activeSkeleton) cout << "no skeleton being tracked" << endl;
+//    if (!activeSkeleton) cout << "no skeleton being tracked" << endl;
     
     return activeSkeleton;
 }
 
+// --------------------------------------------------------------------
+
+void kinectRecorder::drawSkeleton() {
+    
+    ofSetColor(255);
+    
+    ofSetLineWidth(1);
+    
+    // find midpoint between shoulders
+    ofVec3f neck = skeleton["leftshoulder"].position.getMiddle(skeleton["rightshoulder"].position);
+    
+    ofLine(skeleton["head"].position, neck);
+    
+    ofLine(skeleton["rightshoulder"].position, skeleton["leftshoulder"].position);
+    
+    ofLine(skeleton["torso"].position, skeleton["leftshoulder"].position);
+    ofLine(skeleton["leftshoulder"].position, skeleton["leftelbow"].position);
+    ofLine(skeleton["leftelbow"].position, skeleton["lefthand"].position);
+
+    ofLine(skeleton["torso"].position, skeleton["rightshoulder"].position);
+    ofLine(skeleton["rightshoulder"].position, skeleton["rightelbow"].position);
+    ofLine(skeleton["rightelbow"].position, skeleton["righthand"].position);
+    
+    ofLine(skeleton["lefthip"].position, skeleton["righthip"].position);
+    
+    ofLine(skeleton["torso"].position, skeleton["lefthip"].position);
+    ofLine(skeleton["lefthip"].position, skeleton["leftknee"].position);
+    ofLine(skeleton["leftknee"].position, skeleton["leftfoot"].position);
+    
+    ofLine(skeleton["torso"].position, skeleton["righthip"].position);
+    ofLine(skeleton["righthip"].position, skeleton["rightknee"].position);
+    ofLine(skeleton["rightknee"].position, skeleton["rightfoot"].position);
+}
 

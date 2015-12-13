@@ -26,7 +26,7 @@ void soundLine::resampleLine(bool bSmooth) {
     
     if (bSmooth) {
         
-        newLine = newLine.getSmoothed(5, 0.5);
+        newLine = newLine.getSmoothed(15, 0.5);
     }
     
     resampledLine = newLine;
@@ -44,15 +44,30 @@ int soundLine::getCurrentPlaybackTime() {
 
 // ----------------------------------------------------------------------
 
-float soundLine::getDistToPlaybackPoint(ofVec3f jointPosition) {
+ofVec3f soundLine::getCurrentPlaybackPoint() {
     
     int playbackTime = getCurrentPlaybackTime();
-    
+
     float amtThruLine = (float)playbackTime / (float)duration;
+
+    ofVec3f playbackPoint = resampledLine.getPointAtPercent(amtThruLine);
+
+    return playbackPoint;
+}
+
+// ----------------------------------------------------------------------
+
+float soundLine::getDistToPlaybackPoint(ofVec3f jointPosition) {
     
-    ofVec3f closestPoint = resampledLine.getPointAtPercent(amtThruLine);
+//    int playbackTime = getCurrentPlaybackTime();
+//    
+//    float amtThruLine = (float)playbackTime / (float)duration;
+//    
+//    ofVec3f playbackPoint = resampledLine.getPointAtPercent(amtThruLine);
+//    
+//    float distToPt = playbackPoint.distance(jointPosition);
     
-    float distToPt = closestPoint.distance(jointPosition);
+    float distToPt = jointPosition.distance(getCurrentPlaybackPoint());
     
     return distToPt;
 }

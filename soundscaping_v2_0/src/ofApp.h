@@ -5,6 +5,7 @@
 #include "ofxOsc.h"
 #include "kinectJoint.h"
 #include "gestureRecognition.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,5 +26,17 @@ class ofApp : public ofBaseApp{
 		
     kinectRecorder kin;
     gestureProcessor gst;
+    
+//    ofParameter<bool> reset;
+//    ofParameterGroup generalControls;
+    
+//    ofParameterGroup audioControls;
+    
+//    ofxPanel panel;
+    
+    ofEasyCam cam;
+    
+    ofPlanePrimitive plane;
+
 
 };

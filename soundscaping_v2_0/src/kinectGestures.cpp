@@ -8,6 +8,51 @@
 
 #include "kinectGestures.h"
 
+
+// just update the state of the gesture (don't do any debugging here)
+void gesture::updateGesture(map<string, joint> skeleton_) {
+    
+    // find the distance from the right hand to the left hand
+    float dist = skeleton_["righthand"].position.distance(skeleton_["lefthand"].position);
+//    cout << "dist " << dist;
+    
+    // update the gesture states
+    float distanceOnThreshold = 125.;
+    float distanceOffThreshold = 300.;
+    if (dist < distanceOnThreshold && dist > 0) { // cull out distances of zero
+        gestureState = true;
+        
+//        cout << "   gesture state is ON";
+        
+    } else if (dist > distanceOffThreshold) {
+        gestureState = false;
+        
+//        cout << "    gesture state is OFF";
+    }
+    
+    // update the flags
+    if (gestureState && !prevGestureState) {
+        flagON = true;
+        
+//        cout << "    flag ON";
+        
+    } else if (!gestureState && prevGestureState) {
+        flagOFF = true;
+        
+//        cout << "    flag OFF";
+    }
+    
+//    cout << "this gesture state " << gestureState << "  prev gesture state " << prevGestureState << endl;
+
+    
+//    cout << "    prev gest state used to be " << prevGestureState;
+    
+    prevGestureState = gestureState;
+    
+//    cout << ", but now it's " << prevGestureState << endl;
+
+}
+
 //gesture::gesture(map<string, joint> skeleton_) {
 //    
 //    // get address of original skeleton and store it in a pointer
@@ -48,15 +93,26 @@
 // -----------------------------------------------------------------------
 
 // just update the state of the gesture (don't do any debugging here)
-void gesture::updateGesture(map<string, joint> skeleton_) {
-    
-    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
-    
-            setGestureState(true);
-    
-    }
-    
-}
+//void gesture::updateGesture(map<string, joint> skeleton_) {
+//    
+//    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
+//    
+//        setGestureState(true);
+//    
+//    } else if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) > 100. && gestureState) {
+//        
+//        setGestureState(false);
+//        
+//    }
+//    
+//    prevGestureState = gestureState;
+//
+////    cout << "current Gstate " << gestureState << "   prev Gstate " << prevGestureState << "   flag on is " << flagON << "   flag off is " << flagOFF << endl;
+//    
+//    
+//
+//    
+//}
 
 
 //void gesture::updateGesture(map<string, joint> skeleton_, bool activeSkeleton_) {
@@ -86,23 +142,21 @@ void gesture::updateGesture(map<string, joint> skeleton_) {
 
 // -----------------------------------------------------------------------
 
-void gesture::setGestureState(bool bState) {
-    
-    prevGestureState = gestureState;
-    
-    gestureState = bState;
-    
-    // change appropriate flags
-    if (gestureState && !prevGestureState) {
-        
-        flagON = true;
-        
-    } else if (!gestureState && prevGestureState) {
-        
-        flagOFF = true;
-        
-    }
-}
+//void gesture::setGestureState(bool bState) {
+//    
+//    gestureState = bState;
+//    
+//    // change appropriate flags
+//    if (gestureState && !prevGestureState) {
+//        
+//        flagON = true;
+//        
+//    } else if (!gestureState && prevGestureState) {
+//        
+//        flagOFF = true;
+//        
+//    }
+//}
 
 // -----------------------------------------------------------------------
 
@@ -110,6 +164,9 @@ bool gesture::getFlagON() {
     
     bool tempFlag = flagON;
     flagON = false;
+    
+    
+//    cout << "temp flag is " << ofToString(tempFlag) << endl;
     return tempFlag;
 }
 
@@ -119,6 +176,7 @@ bool gesture::getFlagOFF() {
     
     bool tempFlag = flagOFF;
     flagOFF = false;
+
     return tempFlag;
 }
 

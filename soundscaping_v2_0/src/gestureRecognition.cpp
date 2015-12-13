@@ -8,14 +8,23 @@
 
 #include "gestureRecognition.h"
 
+gestureProcessor::gestureProcessor() {
+    
+    // setup gui
+//    gstControls.setName("Audio Controls");
+//    gstControls.add(volumeExponent.set("Volume Power", 3., 0., 5.));
+//    gstControls.add(maxDistance.set("Max Distance", 3000., 0., 5000.));
+    
+}
+
 void gestureProcessor::linkSkeleton(map<string, joint> skeleton_, bool activeSkeleton_) {
     
     // get address of original skeleton and store it in a pointer
     skeleton = &skeleton_;
     
     // setup max OSC
-    toMax.setup("localhost", maxPort);
-//    toMax.setup("128.237.203.67", 1818);
+//    toMax.setup("localhost", maxPort);
+    toMax.setup("128.237.216.248", 1818);
     
     activeSkeleton = &activeSkeleton_;
 }
@@ -31,49 +40,73 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
     myGesture.updateGesture(skeleton_);
     
     // send to max whether or not to begin recording
-    updateLineSpace(myGesture, skeleton_, activeSkeleton_);
+    updateLineSpace(skeleton_, activeSkeleton_);
     
 }
 
 // ----------------------------------------------------------------------
 
-void gestureProcessor::updateLineSpace(gesture gesture_, map<string, joint> skeleton_, bool activeSkeleton_) {
+void gestureProcessor::updateLineSpace(map<string, joint> skeleton_, bool activeSkeleton_) {
+
+    // why can't I call these here if I pass myGesture as an argument????
+//    if (gesture_.getFlagON()) cout << "get flag on is true" << endl;
+//    if (gesture_.getFlagOFF()) cout << "get flag off is true" << endl;
     
     // if we're not currently recording...
     if (!recordingState) {
-
+        
         // ... and a gesture is on and the skeleton is actively being tracked ...
-        if (gesture_.getFlagON() && activeSkeleton_) {
+        if ((myGesture.getFlagON()) && activeSkeleton_) {
             
             // ... and the last time a note was turned on was more than 1 second ago...
-            if ((lastLineOnTime + bounceOnTime) < ofGetElapsedTimeMillis()) {
+            
+            cout << "gesture on and skeleton tracked  --  lastLineOnTime = " << lastLineOnTime << "   bounceOnTime = " << bounceOnTime << "   current time = " << ofGetElapsedTimeMillis() << endl;
+            
+//            if ((lastLineOnTime + bounceOnTime) < ofGetElapsedTimeMillis()) {
+            
+//                cout << "last line on was more than 1000 ms ago  -- check 
+                
+                // bounce to make sure duration is at least a certain length
                 
                 // ... and the last time a note was turned off is more than 1/2 sec ago, then start recording
-                if ((lastLineOffTime + bounceOffTime) < ofGetElapsedTimeMillis()) {
-                    
+                if (ofGetElapsedTimeMillis() > (lastLineOffTime + bounceOffTime)) {
+            
                     recordingState = true;
                     
                     // reset the last note on time
                     lastLineOnTime = ofGetElapsedTimeMillis();
+//                    cout << "buffer counter = " << bufferCounter << "    last line on time = " << lastLineOnTime << endl;
+//                    cout << "buffer counter = " << bufferCounter << "    last line off time = " << lastLineOffTime << endl;
                     
                     // send message to Max
                     ofxOscMessage msg;
                     msg.setAddress("/record");
                     msg.addIntArg(1);
                     msg.addIntArg(bufferCounter);
-                    //            msg.addIntArg(1000);
+//                    msg.addIntArg(0);
                     toMax.sendMessage(msg);
                     
-                    cout << "start recording with buffer # " << currentBufferNumber << endl;
+                    cout << "start recording with buffer # " << bufferCounter << endl;
+                
+//                    cout << "end recording with buffer # " << bufferCounter << "  timezero = " << timeZero << "   lastTime = " << lastTime << "  duration = " << bufferDuration << endl;
                 }
-            }
+//            }
         }
     }
+    
+
     // if we're currently recording...
     else if (recordingState) {
         
         // ... and the gesture turns off or the length of the recording reaches its limit, then stop recording
-        if (gesture_.getFlagOFF() || ((ofGetElapsedTimeMillis() - lastLineOnTime) > maxRecordingTime)) {
+        
+        // flag off is ambiguous
+//        if (myGesture.getFlagOFF() || ((ofGetElapsedTimeMillis() - lastLineOnTime) > maxRecordingTime)) {
+
+        if ((((ofGetElapsedTimeMillis() - timeZero) > bounceOffTime) && !myGesture.gestureState) || ((ofGetElapsedTimeMillis() - lastLineOnTime) > maxRecordingTime)) {
+        
+//        if (myGesture.getFlagOFF() || ((ofGetElapsedTimeMillis() - lastLineOnTime) > maxRecordingTime)) {
+            
             
             recordingState = false;
             
@@ -81,7 +114,7 @@ void gestureProcessor::updateLineSpace(gesture gesture_, map<string, joint> skel
             
             // set the duration of the recording
             int lastTime = thisLine.times.back(); // DOES THIS WORK??
-            int bufferDuration = lastTime - timeZero;
+            int bufferDuration = lastTime;
             thisLine.duration = bufferDuration;
             
             // set the startTime of the recording
@@ -98,7 +131,9 @@ void gestureProcessor::updateLineSpace(gesture gesture_, map<string, joint> skel
 //            msg.addIntArg(bufferDuration);
             toMax.sendMessage(msg);
 
-            cout << "end recording with buffer # " << currentBufferNumber << endl;
+//            cout << "end recording with buffer # " << bufferCounter << "   at a duration of " << bufferDuration << endl;
+            
+            cout << "end recording with buffer # " << bufferCounter << "  timezero = " << timeZero << "   lastTime = " << lastTime << "  duration = " << bufferDuration << endl;
             
             // add new line to the vector of lines
             allLines.push_back(thisLine);
@@ -142,23 +177,53 @@ void gestureProcessor::playLineSpace(map<string, joint> skeleton_, bool activeSk
         // find distance from playback joint to current playback point
         float dist = allLines[i].getDistToPlaybackPoint(skeleton_[playbackJoint].position);
         
+        // clamp, normalize, and invert distance
+        float scaledDist = 1. - MIN(dist, (float)maxDistance) / maxDistance;
         
+        // reverb gets greater the further away you are
+        float reverbCoeff = 1 - scaledDist;
         
+        // raise to a power to get the dropoff
+        float volumeLevel = pow(scaledDist, volumeExponent);
         
+        int thisBuffer = i + 1;
         
-        
-        
-        
-        
+        ofxOscMessage msg;
+        msg.setAddress("/play");
+        msg.addIntArg(thisBuffer);
+        msg.addFloatArg(volumeLevel);
+        msg.addFloatArg(reverbCoeff);
+        toMax.sendMessage(msg);
     }
+}
+
+// ----------------------------------------------------------------------
+
+void gestureProcessor::drawAudioPaths() {
     
+    ofSetLineWidth(5);
     
-    
-    
-    
-    
-    
-    
+    for (int i = 0; i < allLines.size(); i++) {
+
+        // draw each line with a different color
+        ofColor thisColor = ofColor(255, (i * 94) % 255, (i * 327) % 255);
+        
+        ofSetColor(thisColor);
+        
+        allLines[i].resampledLine.draw();
+        
+        // draw current points
+        ofVec3f thisPoint = allLines[i].getCurrentPlaybackPoint();
+        
+//        cout << "duration of buffer " << (i+1) << " line is " << allLines[i].duration << "    and start time is " << allLines[i].startTime << endl;
+
+        ofCircle(thisPoint, 20);
+        
+//        ofSpherePrimitive sphere;
+//        sphere.setPosition(thisPoint);
+//        sphere.setRadius(10.);
+//        sphere.draw();
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -207,7 +272,7 @@ void gestureProcessor::updatePixelSpace(gesture gestureOfInterest, map<string, j
             msg.addIntArg(1000);
             toMax.sendMessage(msg);
             
-            cout << "start recording with buffer # " << currentBufferNumber << endl;
+//            cout << "start recording with buffer # " << currentBufferNumber << endl;
         }
         
     } else if (myGesture.getFlagOFF() && recordingState) {
@@ -225,7 +290,7 @@ void gestureProcessor::updatePixelSpace(gesture gestureOfInterest, map<string, j
         
         recordingState = false;
         
-        cout << "end recording with buffer # " << currentBufferNumber << endl;
+//        cout << "end recording with buffer # " << currentBufferNumber << endl;
     }
 }
 

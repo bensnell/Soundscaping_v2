@@ -30,8 +30,7 @@ public:
     bool gestureState = false;
     bool prevGestureState = false;
     // flags to hold switch from on to off and vice versa
-    bool flagON = false;
-    bool flagOFF = false;
+
     bool getFlagON();
     bool getFlagOFF();
     
@@ -42,13 +41,18 @@ public:
     void handsTogether(map<string, joint> skeleton_);
     unsigned long lastGestureOnTime;
     
-    // MODULAR SYSTEM OF AVAILABLE GESTURES
-    void createGestureByProximity(map<string, joint> skeleton_, string jointA_, string jointB_);
-    void createGestureByHeight(map<string, joint> skeleton_, string jointHigh, string jointLow, ofVec3f projectedAxis);
-    void createGestureByDirection(map<string, joint> skeleton_, string jointA, string jointB, ofVec3f direction);
-//    void (*createGesture)(map<string, joint> skeleton_, string jointA_, string jointB_, ofVec3f vecOfInterest);
-    string jointA;
-    string jointB;
+//    // MODULAR SYSTEM OF AVAILABLE GESTURES
+//    void createGestureByProximity(map<string, joint> skeleton_, string jointA_, string jointB_);
+//    void createGestureByHeight(map<string, joint> skeleton_, string jointHigh, string jointLow, ofVec3f projectedAxis);
+//    void createGestureByDirection(map<string, joint> skeleton_, string jointA, string jointB, ofVec3f direction);
+////    void (*createGesture)(map<string, joint> skeleton_, string jointA_, string jointB_, ofVec3f vecOfInterest);
+//    string jointA;
+//    string jointB;
+    
+private:
+    
+    bool flagON = false;
+    bool flagOFF = false;
     
     
 };

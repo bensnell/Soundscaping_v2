@@ -24,6 +24,8 @@ public:
     // ---- CONSTRUCTION ---
     // ---------------------
     
+    gestureProcessor();
+    
     void linkSkeleton(map<string, joint> skeleton_, bool activeSkeleton_);
     // pass original object to function (i.e. <skeleton>)
     
@@ -58,19 +60,24 @@ public:
     // ---------------------
     
     // determine whether to begin or end recording and send this to Max
-    void updateLineSpace(gesture gesture_, map<string, joint> skeleton_, bool activeSkeleton_);
+    void updateLineSpace(map<string, joint> skeleton_, bool activeSkeleton_);
     
-    string recordingJoint = "head";
+    string recordingJoint = "righthand";
     
     // send volumes of each buffer to max
     void playLineSpace(map<string, joint> skeleton_, bool activeSkeleton_);
     
-    string playbackJoint = "head";
+    string playbackJoint = "righthand";
     
     soundLine thisLine;
     unsigned long timeZero;
     vector<soundLine> allLines;
-    int bufferCounter = 0;
+    int bufferCounter = 1; // start with 1 not zero
+    
+    float maxDistance = 3000.;
+    float volumeExponent = 3.;
+    
+    void drawAudioPaths();
     
     // ---------------------
     // ---- PIXEL SPACE ----
@@ -88,7 +95,6 @@ public:
 
     void playAudioPixelSpace(map<string, joint> skeleton_, bool activeSkeleton_);
     
-    
     // ---------------------
     // ------- TO MAX ------
     // ---------------------
@@ -97,6 +103,13 @@ public:
     ofxOscSender toMax;
     int maxPort = 1818;
     
+    // ---------------------
+    // -------- GUI --------
+    // ---------------------
+    
+//    ofParameterGroup gstControls;
+//    ofParameter<float> volumeExponent;
+//    ofParameter<float> maxDistance;
     
 };
 

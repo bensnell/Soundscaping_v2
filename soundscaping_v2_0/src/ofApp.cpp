@@ -2,14 +2,32 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
     ofSetFrameRate(60);
+    ofEnableDepthTest();
+    cam.setDistance(8000);
+    cam.setFarClip(10000);
     
     // start kinect, open ports
     kin.setupKinect();
     
     // this "linking" should prevent having to pass it in below...
     gst.linkSkeleton(kin.skeleton, kin.activeSkeleton);
+    
+
+    
+//    generalControls.setName("General Controls");
+//    generalControls.add(reset.set("Reset", false));
+    
+//    audioControls.add(gst.gstControls);
+    
+//    panel.setup();
+//    panel.add(generalControls);
+//    panel.add(audioControls);
+    
+    plane.set(4000., 4000.);
+    plane.setPosition(0, 0, 0);
+
+    
 }
 
 //--------------------------------------------------------------
@@ -34,14 +52,33 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(0);
+    
+    cam.begin();
+    
+    ofPushMatrix();
+    ofSetColor(100);
+    ofTranslate(0, -1250, 0);
+    ofRotateX(270);
+    plane.draw();
+    ofPopMatrix();
+    
+    // draw the skeleton and the lines
+    kin.drawSkeleton();
+    gst.drawAudioPaths();
+    
+    cam.end();
+    
+//    panel.draw();
     
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
+    if (key == 'f') ofToggleFullscreen();
 }
 
 //--------------------------------------------------------------

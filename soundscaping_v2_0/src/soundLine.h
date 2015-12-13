@@ -29,6 +29,8 @@ public:
     // once a soundline is made, it keeps looping and the position changes with the position of the original recording -- calling this will return the current time within the track
     int getCurrentPlaybackTime();
     
+    ofVec3f getCurrentPlaybackPoint();
+    
     // returns the distance (unscaled) to the current playback point (dependent on this time) from the position provided
     float getDistToPlaybackPoint(ofVec3f jointPosition);
     

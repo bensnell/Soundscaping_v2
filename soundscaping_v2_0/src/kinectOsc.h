@@ -56,6 +56,13 @@ public:
     // updates states of joints (active or inactive) and of skeleton
     bool updateState(unsigned long maxTime = 1000);
     bool activeSkeleton = false;
+
+    // ---------------------
+    // ------ DRAWING ------
+    // ---------------------
+    
+    void drawSkeleton();
+    
     
 };
 

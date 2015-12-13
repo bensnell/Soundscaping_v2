@@ -60,7 +60,7 @@ void gestureProcessor::updateLineSpace(map<string, joint> skeleton_, bool active
             
             // ... and the last time a note was turned on was more than 1 second ago...
             
-            cout << "gesture on and skeleton tracked  --  lastLineOnTime = " << lastLineOnTime << "   bounceOnTime = " << bounceOnTime << "   current time = " << ofGetElapsedTimeMillis() << endl;
+//            cout << "gesture on and skeleton tracked  --  lastLineOnTime = " << lastLineOnTime << "   bounceOnTime = " << bounceOnTime << "   current time = " << ofGetElapsedTimeMillis() << endl;
             
 //            if ((lastLineOnTime + bounceOnTime) < ofGetElapsedTimeMillis()) {
             
@@ -225,6 +225,21 @@ void gestureProcessor::drawAudioPaths() {
 //        sphere.draw();
     }
 }
+
+// ----------------------------------------------------------------------
+
+void gestureProcessor::resetSystem() {
+    
+    allLines.clear();
+    bufferCounter = 1;
+    
+    ofxOscMessage msg;
+    msg.setAddress("/reset");
+    msg.addIntArg(1);
+    toMax.sendMessage(msg);
+    
+}
+
 
 // ----------------------------------------------------------------------
 

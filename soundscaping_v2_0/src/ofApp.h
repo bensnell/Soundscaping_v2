@@ -27,12 +27,14 @@ class ofApp : public ofBaseApp{
     kinectRecorder kin;
     gestureProcessor gst;
     
-//    ofParameter<bool> reset;
-//    ofParameterGroup generalControls;
+    ofParameter<bool> reset;
+//    ofxButton myButton;
+//    ofParameter<float> bset;
+    ofParameterGroup generalControls;
     
 //    ofParameterGroup audioControls;
     
-//    ofxPanel panel;
+    ofxPanel panel;
     
     ofEasyCam cam;
     

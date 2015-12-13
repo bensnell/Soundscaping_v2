@@ -15,18 +15,19 @@ void ofApp::setup(){
     
 
     
-//    generalControls.setName("General Controls");
-//    generalControls.add(reset.set("Reset", false));
+    generalControls.setName("General Controls");
+    generalControls.add(reset.set("Reset", false));
+//    generalControls.add(bset.set("what", 0., 0., 1.));
+//    generalControls.add(myButton.setup("Rese the system"));
     
 //    audioControls.add(gst.gstControls);
-    
-//    panel.setup();
-//    panel.add(generalControls);
+    panel.setup();
+    panel.add(generalControls);
+
 //    panel.add(audioControls);
     
-    plane.set(4000., 4000.);
+    plane.set(8000., 8000.);
     plane.setPosition(0, 0, 0);
-
     
 }
 
@@ -47,6 +48,7 @@ void ofApp::update(){
     
     // update spatialized audio --> send to max volume levels for each buffer
     gst.playLineSpace(kin.skeleton, kin.activeSkeleton);
+    
 
 }
 
@@ -79,6 +81,11 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
 
     if (key == 'f') ofToggleFullscreen();
+    
+    // reset the system
+    if (key == 'r') {
+        gst.resetSystem();
+    }
 }
 
 //--------------------------------------------------------------

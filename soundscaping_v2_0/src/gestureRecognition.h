@@ -15,6 +15,7 @@
 #include "ofxOsc.h"
 //#include "soundParticle.h"
 #include "soundLine.h"
+#include "ofxGui.h"
 
 class gestureProcessor {
     
@@ -102,6 +103,8 @@ public:
     // communication to max
     ofxOscSender toMax;
     int maxPort = 1818;
+    
+    void resetSystem();
     
     // ---------------------
     // -------- GUI --------

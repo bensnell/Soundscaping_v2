@@ -64,8 +64,11 @@
 		F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */; };
 		F4135EEFC911E9ED211FB6F9 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = CF528C0E8DBFF5C31E8D6529 /* core.c */; };
 		FCC16AB16073FF0581F50ED7 /* loader.c in Sources */ = {isa = PBXBuildFile; fileRef = FE25F20F363BC625B852BFBC /* loader.c */; };
+		FE18970C1C1DCFA40027F0AE /* soundLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE18970A1C1DCFA40027F0AE /* soundLine.cpp */; };
 		FE8735F81C0FDC0100DC1A04 /* kinectOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE8735F61C0FDC0100DC1A04 /* kinectOsc.cpp */; };
 		FEBB2C6F1C14ACAF003C4F53 /* kinectGestures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBB2C6D1C14ACAF003C4F53 /* kinectGestures.cpp */; };
+		FEBB2C721C14F5BE003C4F53 /* gestureRecognition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBB2C701C14F5BE003C4F53 /* gestureRecognition.cpp */; };
+		FEBB2C751C15010B003C4F53 /* soundParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEBB2C731C15010B003C4F53 /* soundParticle.cpp */; };
 		FEF3D9601C1126DD00960E62 /* kinectJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEF3D95E1C1126DD00960E62 /* kinectJoint.cpp */; };
 /* End PBXBuildFile section */
 
@@ -206,11 +209,17 @@
 		F4F5B6B8BA2BD52C646ED908 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		F7FBC56859535E597B24BB91 /* NetworkingUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = NetworkingUtils.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h; sourceTree = SOURCE_ROOT; };
 		FC5DA1C87211D4F6377DA719 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxmlparser.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
+		FE18970A1C1DCFA40027F0AE /* soundLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundLine.cpp; sourceTree = "<group>"; };
+		FE18970B1C1DCFA40027F0AE /* soundLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundLine.h; sourceTree = "<group>"; };
 		FE25F20F363BC625B852BFBC /* loader.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 30; name = loader.c; path = ../../../addons/ofxKinect/libs/libfreenect/src/loader.c; sourceTree = SOURCE_ROOT; };
 		FE8735F61C0FDC0100DC1A04 /* kinectOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kinectOsc.cpp; sourceTree = "<group>"; };
 		FE8735F71C0FDC0100DC1A04 /* kinectOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinectOsc.h; sourceTree = "<group>"; };
 		FEBB2C6D1C14ACAF003C4F53 /* kinectGestures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kinectGestures.cpp; sourceTree = "<group>"; };
 		FEBB2C6E1C14ACAF003C4F53 /* kinectGestures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinectGestures.h; sourceTree = "<group>"; };
+		FEBB2C701C14F5BE003C4F53 /* gestureRecognition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gestureRecognition.cpp; sourceTree = "<group>"; };
+		FEBB2C711C14F5BE003C4F53 /* gestureRecognition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gestureRecognition.h; sourceTree = "<group>"; };
+		FEBB2C731C15010B003C4F53 /* soundParticle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundParticle.cpp; sourceTree = "<group>"; };
+		FEBB2C741C15010B003C4F53 /* soundParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundParticle.h; sourceTree = "<group>"; };
 		FEF3D95E1C1126DD00960E62 /* kinectJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kinectJoint.cpp; sourceTree = "<group>"; };
 		FEF3D95F1C1126DD00960E62 /* kinectJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinectJoint.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -543,8 +552,14 @@
 				FE8735F71C0FDC0100DC1A04 /* kinectOsc.h */,
 				FEF3D95E1C1126DD00960E62 /* kinectJoint.cpp */,
 				FEF3D95F1C1126DD00960E62 /* kinectJoint.h */,
+				FEBB2C701C14F5BE003C4F53 /* gestureRecognition.cpp */,
+				FEBB2C711C14F5BE003C4F53 /* gestureRecognition.h */,
 				FEBB2C6D1C14ACAF003C4F53 /* kinectGestures.cpp */,
 				FEBB2C6E1C14ACAF003C4F53 /* kinectGestures.h */,
+				FEBB2C731C15010B003C4F53 /* soundParticle.cpp */,
+				FEBB2C741C15010B003C4F53 /* soundParticle.h */,
+				FE18970A1C1DCFA40027F0AE /* soundLine.cpp */,
+				FE18970B1C1DCFA40027F0AE /* soundLine.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -719,6 +734,7 @@
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
+				FEBB2C721C14F5BE003C4F53 /* gestureRecognition.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
@@ -728,6 +744,8 @@
 				0F8F016776681D468C0D0949 /* audio.c in Sources */,
 				ACE7DC9A3223ED5EE1B80074 /* cameras.c in Sources */,
 				F4135EEFC911E9ED211FB6F9 /* core.c in Sources */,
+				FE18970C1C1DCFA40027F0AE /* soundLine.cpp in Sources */,
+				FEBB2C751C15010B003C4F53 /* soundParticle.cpp in Sources */,
 				E55DEEF784A10419E444669E /* flags.c in Sources */,
 				21A059755481CC0BF969FD2D /* keep_alive.c in Sources */,
 				FEF3D9601C1126DD00960E62 /* kinectJoint.cpp in Sources */,

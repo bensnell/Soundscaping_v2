@@ -5,18 +5,30 @@ void ofApp::setup(){
     
     ofSetFrameRate(60);
     
+    // start kinect, open ports
     kin.setupKinect();
+    
+    // this "linking" should prevent having to pass it in below...
+    gst.linkSkeleton(kin.skeleton, kin.activeSkeleton);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
+    // request all joints from max every 2 sec
     kin.requestAllJoints(2);
+    
+    // update the physics and hits of all joints
     kin.updateAllJoints();
+    
+    // re-evaluate the state of the skeleton / joints (actively being tracked?)
     kin.updateState();
     
-    // magnitude of the avg velocity of the right hand
-//    cout << kin.joints["righthand"].avgVelocity.length() << endl;
+    // process gestures and notify max of begin / end of recording
+    gst.processSkeleton(kin.skeleton, kin.activeSkeleton);
+    
+    // update spatialized audio --> send to max volume levels for each buffer
+    gst.playLineSpace(kin.skeleton, kin.activeSkeleton);
 
 }
 

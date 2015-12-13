@@ -14,32 +14,75 @@
 //    skeleton = &skeleton_;
 //}
 
+//// closeness of jointA and jointB
+//void gesture::createGestureByProximity(map<string, joint> skeleton_, string jointA_, string jointB_) {
+//    
+//    jointA = jointA_;
+//    jointB = jointB_;
+////        createGesture = &createGestureByProximity;
+//    
+//    
+//    
+//    
+//    
+//    
+//}
+//
+//// jointA further along projected axis than jointB
+//void gesture::createGestureByHeight(map<string, joint> skeleton_, string jointA, string jointB, ofVec3f projectedAxis) {
+//    
+//    
+//
+//
+//    
+//}
+//
+//// direction is from jointA to jointB (ray AB)
+//void gesture::createGestureByDirection(map<string, joint> skeleton_, string jointA, string jointB, ofVec3f direction) {
+//    
+//    
+//    
+//    
+//}
+
 // -----------------------------------------------------------------------
 
-void gesture::updateGesture(map<string, joint> skeleton_, bool activeSkeleton_) {
-    
-    activeSkeleton__ = activeSkeleton_;
-    
-    handsTogether(skeleton_);
-    
-}
-
-// -----------------------------------------------------------------------
-
-void gesture::handsTogether(map<string, joint> skeleton_) {
+// just update the state of the gesture (don't do any debugging here)
+void gesture::updateGesture(map<string, joint> skeleton_) {
     
     if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
-        
-        setGestureState(true);
-        
-        lastGestureOnTime = ofGetElapsedTimeMillis();
-        
+    
+            setGestureState(true);
+    
     }
-    if ((ofGetElapsedTimeMillis() > (lastGestureOnTime + 3000))){
-        
-        setGestureState(false);
-    }
+    
 }
+
+
+//void gesture::updateGesture(map<string, joint> skeleton_, bool activeSkeleton_) {
+//    
+//    activeSkeleton__ = activeSkeleton_;
+//    
+//    handsTogether(skeleton_);
+//    
+//    lastGestureOnTime = ofGetElapsedTimeMillis();
+//    
+//}
+//
+//// -----------------------------------------------------------------------
+//
+//void gesture::handsTogether(map<string, joint> skeleton_) {
+//    
+//    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
+//        
+//        setGestureState(true);
+//        
+//    }
+//    if ((ofGetElapsedTimeMillis() > (lastGestureOnTime + 3000))){
+//        
+//        setGestureState(false);
+//    }
+//}
 
 // -----------------------------------------------------------------------
 
@@ -50,7 +93,7 @@ void gesture::setGestureState(bool bState) {
     gestureState = bState;
     
     // change appropriate flags
-    if (gestureState && !prevGestureState && activeSkeleton__) {
+    if (gestureState && !prevGestureState) {
         
         flagON = true;
         

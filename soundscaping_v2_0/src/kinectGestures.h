@@ -23,7 +23,7 @@ public:
     // pass original object to function (i.e. <skeleton>)
     
     // call this function to update the gesture each frame
-    void updateGesture(map<string, joint> skeleton_, bool activeSkeleton_);
+    void updateGesture(map<string, joint> skeleton_);
     
     void setGestureState(bool bState);
     // holds current and previous state of gesture (ON or OFF)
@@ -35,14 +35,21 @@ public:
     bool getFlagON();
     bool getFlagOFF();
     
-    bool activeSkeleton__;
+    unsigned long timeZero;
+    
     
     // AVAILABLE GESTURES:
     void handsTogether(map<string, joint> skeleton_);
-
-    // NEED DEBOUNCER
-    
     unsigned long lastGestureOnTime;
+    
+    // MODULAR SYSTEM OF AVAILABLE GESTURES
+    void createGestureByProximity(map<string, joint> skeleton_, string jointA_, string jointB_);
+    void createGestureByHeight(map<string, joint> skeleton_, string jointHigh, string jointLow, ofVec3f projectedAxis);
+    void createGestureByDirection(map<string, joint> skeleton_, string jointA, string jointB, ofVec3f direction);
+//    void (*createGesture)(map<string, joint> skeleton_, string jointA_, string jointB_, ofVec3f vecOfInterest);
+    string jointA;
+    string jointB;
+    
     
 };
 

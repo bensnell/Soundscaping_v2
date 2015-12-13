@@ -14,6 +14,7 @@
 #include "kinectGestures.h"
 #include "ofxOsc.h"
 //#include "soundParticle.h"
+#include "soundLine.h"
 
 class gestureProcessor {
     
@@ -42,18 +43,50 @@ public:
     gesture myGesture;
     
     // ---------------------
-    // -- PIXELIZED SPACE --
+    // - GENERAL RECORDING -
     // ---------------------
+    
+    bool recordingState = false;
+    unsigned long lastLineOnTime = 0; // ms
+    unsigned long lastLineOffTime = 0;
+    unsigned long bounceOnTime = 1000;
+    unsigned long bounceOffTime = 500;
+    unsigned long maxRecordingTime = 10000;
+    
+    // ---------------------
+    // ---- LINE SPACE -----
+    // ---------------------
+    
+    // determine whether to begin or end recording and send this to Max
+    void updateLineSpace(gesture gesture_, map<string, joint> skeleton_, bool activeSkeleton_);
+    
+    string recordingJoint = "head";
+    
+    // send volumes of each buffer to max
+    void playLineSpace(map<string, joint> skeleton_, bool activeSkeleton_);
+    
+    string playbackJoint = "head";
+    
+    soundLine thisLine;
+    unsigned long timeZero;
+    vector<soundLine> allLines;
+    int bufferCounter = 0;
+    
+    // ---------------------
+    // ---- PIXEL SPACE ----
+    // ---------------------
+    
+    void updatePixelSpace(gesture gestureOfInterest, map<string, joint> skeleton_, bool activeSkeleton_);
 
     ofVec3f spaceLowerCorner = ofVec3f(-1000., -1000., 2000.);
     float spaceSideLength = 2000.;
     int nSideDivisions = 4;
     
     map<int, ofVec3f> soundParticles;
-    int currentBufferNumber = -1; // if not -1, we're currently writing to a buffer
     ofVec3f currentPoint;
-    bool recordingState = false;
-    unsigned long startTime;
+    int currentBufferNumber = 0;
+
+    void playAudioPixelSpace(map<string, joint> skeleton_, bool activeSkeleton_);
     
     
     // ---------------------
@@ -64,7 +97,6 @@ public:
     ofxOscSender toMax;
     int maxPort = 1818;
     
-    void playAudio(map<string, joint> skeleton_, bool activeSkeleton_);
     
 };
 

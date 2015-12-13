@@ -151,11 +151,12 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
         }
     }
     
-    // if more than half of the joints are active
+    // if any joints aren't active, skeleton is not actively being tracked
     activeSkeleton = (nActiveJoints == 15);
     
-    return activeSkeleton;
+    if (!activeSkeleton) cout << "no skeleton being tracked" << endl;
     
+    return activeSkeleton;
 }
 
 

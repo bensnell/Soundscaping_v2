@@ -26,41 +26,6 @@ void gesture::updateGesture(map<string, joint> skeleton_, bool activeSkeleton_) 
 
 // -----------------------------------------------------------------------
 
-//// check if right hand is above head
-//void gesture::righthandAboveHead() {
-//    // Within this function, to access original skeleton, use this format:
-//        // (*skeleton)["joint_name"]
-//    
-//    // check for whether right hand is above head
-//    bool rightAboveHead = ((*skeleton)["righthand"].position.y > (*skeleton)["head"].position.y);
-//    bool prevRightAboveHead = ((*skeleton)["righthand"].prevPosition.y > (*skeleton)["head"].prevPosition.y);
-//    
-//    // check for whether left hand is below torso
-//    bool leftBelowTorso = ((*skeleton)["lefthand"].position.y < (*skeleton)["torso"].position.y);
-//    
-//    if (rightAboveHead && ! prevRightAboveHead && leftBelowTorso) {
-//        gestureON = true;
-//
-//        
-//    }
-//    
-//    
-//}
-
-// -----------------------------------------------------------------------
-
-//void gesture::handsTogether(map<string, joint> skeleton_) {
-//    
-//    if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100.) {
-//        
-//        setGestureState(true);
-//
-//    } else {
-//        
-//        setGestureState(false);
-//    }
-//}
-
 void gesture::handsTogether(map<string, joint> skeleton_) {
     
     if (skeleton_["righthand"].position.distance(skeleton_["lefthand"].position) < 100. && !gestureState) {
@@ -84,20 +49,15 @@ void gesture::setGestureState(bool bState) {
     
     gestureState = bState;
     
-//    cout << "state within setGestureState " << ofToString(activeSkeleton__) << "    " << prevGestureState << "  " << gestureState << endl;
-    
     // change appropriate flags
     if (gestureState && !prevGestureState && activeSkeleton__) {
         
         flagON = true;
         
-//        cout << "start recording" << endl;
-        
     } else if (!gestureState && prevGestureState) {
         
         flagOFF = true;
         
-//        cout << "end recording" << endl;
     }
 }
 
@@ -118,10 +78,5 @@ bool gesture::getFlagOFF() {
     flagOFF = false;
     return tempFlag;
 }
-
-// -----------------------------------------------------------------------
-
-
-
 
 

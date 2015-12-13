@@ -146,8 +146,5 @@ void joint::setAllPhysics(ofVec3f position_, ofVec3f velocity_, ofVec3f accelera
     
 }
 
-// -------------------------------------------------------------------
-
-
 
 

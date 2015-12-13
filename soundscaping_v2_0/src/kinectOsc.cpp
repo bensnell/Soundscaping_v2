@@ -131,28 +131,6 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
     // iterate through all elements in map
     map<string, joint>::iterator it;
     
-//    // get current time
-//    unsigned long thisTime = ofGetElapsedTimeMillis();
-//    
-//    for (it = skeleton.begin(); it != skeleton.end(); it++) {
-//        
-//        // This is how you access the pair's elements:
-////        string thisString = it->first;  // key
-////        joint thisJoint = it->second;   // value
-//        
-//        cout << it->second.lastUpdateTime << endl;
-//        
-//        // if the joint was last updated more than maxTime ago, set its active state to false
-//        if ((it->second.lastUpdateTime + maxTime) < thisTime) {
-//            
-//            it->second.bActive = false;
-//        } else {
-//            
-//            // otherwise, we have one more active joint
-//            nActiveJoints++;
-//        }
-//    }
-    
     for (it = skeleton.begin(); it != skeleton.end(); it++) {
         
         // This is how you access the pair's elements:
@@ -178,12 +156,6 @@ bool kinectRecorder::updateState(unsigned long maxTime) {
     
     return activeSkeleton;
     
-    
 }
-
-// --------------------------------------------------------------------
-
-
-
 
 

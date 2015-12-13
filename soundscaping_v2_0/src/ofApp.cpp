@@ -18,11 +18,6 @@ void ofApp::update(){
     
     gst.processSkeleton(kin.skeleton, kin.activeSkeleton);
     gst.playAudio(kin.skeleton, kin.activeSkeleton);
-    
-    // magnitude of the avg velocity of the right hand
-//    cout << kin.joints["righthand"].avgVelocity.length() << endl;
-    
-//    cout << kin.skeleton["righthand"].position.x << "  " << kin.skeleton["righthand"].position.y << "  " << kin.skeleton["righthand"].position.z << endl;
 
 }
 

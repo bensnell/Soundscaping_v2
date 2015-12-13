@@ -18,7 +18,6 @@ void gestureProcessor::linkSkeleton(map<string, joint> skeleton_, bool activeSke
 //    toMax.setup("128.237.203.67", 1818);
     
     activeSkeleton = &activeSkeleton_;
-    
 }
 
 // ----------------------------------------------------------------------
@@ -27,18 +26,12 @@ void gestureProcessor::linkSkeleton(map<string, joint> skeleton_, bool activeSke
 void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool activeSkeleton_) {
     
     // should eventually look through all gestures added to this gesture processor...
-    
-//    cout << (*skeleton).size() << endl;
-    
+
     // update the gestures to check for changes / activations / deactivations
     myGesture.updateGesture(skeleton_, activeSkeleton_);
     
-//    cout << activeSkeleton_ << endl;
-    
     // check if any flag on messages have been activated... if so, send to max
     if (myGesture.getFlagON() && !recordingState && activeSkeleton_) {
-        
-//        cout << "here" << endl;
         
         // find the position of the right hand
 //        ofVec3f rHand = skeleton_["righthand"].position;
@@ -48,8 +41,6 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
         float xDot = rHandRelToCorner.dot(ofVec3f(1., 0., 0.));
         float yDot = rHandRelToCorner.dot(ofVec3f(0., 1., 0.));
         float zDot = rHandRelToCorner.dot(ofVec3f(0., 0., 1.));
-        
-//        cout << xDot << "  " << yDot << " " << zDot << endl;
         
         // if the dot products with the axis are less than the radius, continue
         if (xDot > 0 && xDot < spaceSideLength &&
@@ -101,18 +92,13 @@ void gestureProcessor::processSkeleton(map<string, joint> skeleton_, bool active
         cout << "end recording with buffer # " << currentBufferNumber << endl;
     }
 
-    // TODO: if it's more than 10 sec, stop recording
+    // TODO: if recording lasts more than a certain number of seconds, stop recording
     
 }
 
 // ----------------------------------------------------------------------
 
-//void gestureProcessor::sendToMax() {
-//
-//}
-
-// ----------------------------------------------------------------------
-
+// send data to max with the volumes of each buffer
 void gestureProcessor::playAudio(map<string, joint> skeleton_, bool activeSkeleton_) {
     
     map<int, ofVec3f>::iterator it;
@@ -131,12 +117,8 @@ void gestureProcessor::playAudio(map<string, joint> skeleton_, bool activeSkelet
         float volumeLevel = (diagonalLength - distToPoint) / diagonalLength;
         volumeLevel = pow(volumeLevel, 3.f);
         
-//        cout << volumeLevel << endl;
-        
         msg.addFloatArg(volumeLevel);
         toMax.sendMessage(msg);
-        
-//        cout << "send volume adjustment for buffer # " << ofToString(it->first) << " at volume " << ofToString(volumeLevel) << endl;
     }
 }
 

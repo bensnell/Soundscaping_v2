@@ -37,7 +37,6 @@ public:
     
     bool activeSkeleton__;
     
-    
     // AVAILABLE GESTURES:
     void handsTogether(map<string, joint> skeleton_);
 

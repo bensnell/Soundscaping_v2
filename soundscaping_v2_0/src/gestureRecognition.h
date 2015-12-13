@@ -64,19 +64,8 @@ public:
     ofxOscSender toMax;
     int maxPort = 1818;
     
-//    void sendToMax();
-    
     void playAudio(map<string, joint> skeleton_, bool activeSkeleton_);
-
-    
     
 };
-
-
-
-
-
-
-
 
 #endif /* defined(__soundscaping_v2_0__gestureRecognition__) */

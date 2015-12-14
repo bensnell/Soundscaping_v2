@@ -45,7 +45,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 65.5, 88.0, 93.0, 22.0 ],
 					"style" : "",
-					"text" : "0 1"
+					"text" : "0 23"
 				}
 
 			}
@@ -246,7 +246,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 184.5, 211.5, 50.0, 22.0 ],
 					"style" : "",
-					"text" : "1"
+					"text" : "23"
 				}
 
 			}
@@ -364,7 +364,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 41.0, 538.0, 50.0, 22.0 ],
 					"style" : "",
-					"text" : "1"
+					"text" : "23"
 				}
 
 			}
@@ -469,7 +469,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 393.0, 321.0, 50.0, 22.0 ],
 					"style" : "",
-					"text" : "1"
+					"text" : "23"
 				}
 
 			}
@@ -495,7 +495,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 343.0, 417.0, 132.0, 22.0 ],
 					"style" : "",
-					"text" : "set soundscape.1"
+					"text" : "set soundscape.23"
 				}
 
 			}

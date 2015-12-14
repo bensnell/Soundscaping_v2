@@ -5,7 +5,7 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     ofEnableDepthTest();
     cam.setDistance(8000);
-    cam.setFarClip(10000);
+    cam.setFarClip(20000);
     
     // start kinect, open ports
     kin.setupKinect();
@@ -26,7 +26,7 @@ void ofApp::setup(){
 
 //    panel.add(audioControls);
     
-    plane.set(8000., 8000.);
+    plane.set(4000., 4000.);
     plane.setPosition(0, 0, 0);
     
 }
@@ -60,14 +60,39 @@ void ofApp::draw(){
     
     ofPushMatrix();
     ofSetColor(100);
-    ofTranslate(0, -1250, 0);
+    ofTranslate(0, -1250, 2000);
+    ofRotateY(10. * sin((double)(ofGetElapsedTimeMillis() / 5000.)));
     ofRotateX(270);
     plane.draw();
     ofPopMatrix();
     
+    ofPushMatrix();
+    ofSetColor(200);
+    ofTranslate(-200, 0, 0);
+    ofRotateY(10. * sin((double)(ofGetElapsedTimeMillis() / 5000.)));
+//    ofRotateX(270);
+    ofRect(0, 0, 200, 200);
+    ofPopMatrix();
+
+    
+    ofPushMatrix();
+    ofRotateY(10. * sin((double)(ofGetElapsedTimeMillis() / 5000.)));
+    
     // draw the skeleton and the lines
     kin.drawSkeleton();
+    
+    if (gst.recordingState) {
+        ofSetColor(255, 0, 0);
+    } else {
+        ofSetColor(255);
+    }
+    ofCircle(kin.skeleton["righthand"].position, 40);
+    
     gst.drawAudioPaths();
+    
+    ofPopMatrix();
+
+    
     
     cam.end();
     

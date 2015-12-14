@@ -217,7 +217,7 @@ void gestureProcessor::drawAudioPaths() {
         
 //        cout << "duration of buffer " << (i+1) << " line is " << allLines[i].duration << "    and start time is " << allLines[i].startTime << endl;
 
-        ofCircle(thisPoint, 20);
+        ofCircle(thisPoint, 40);
         
 //        ofSpherePrimitive sphere;
 //        sphere.setPosition(thisPoint);

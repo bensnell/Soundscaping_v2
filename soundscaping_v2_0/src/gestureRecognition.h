@@ -76,7 +76,7 @@ public:
     int bufferCounter = 1; // start with 1 not zero
     
     float maxDistance = 3000.;
-    float volumeExponent = 3.;
+    float volumeExponent = 4.;
     
     void drawAudioPaths();
     

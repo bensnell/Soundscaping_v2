@@ -23,8 +23,8 @@ void gestureProcessor::linkSkeleton(map<string, joint> skeleton_, bool activeSke
     skeleton = &skeleton_;
     
     // setup max OSC
-//    toMax.setup("localhost", maxPort);
-    toMax.setup("128.237.216.248", 1818);
+    toMax.setup("localhost", maxPort);
+//    toMax.setup("128.237.216.248", 1818);
     
     activeSkeleton = &activeSkeleton_;
 }
